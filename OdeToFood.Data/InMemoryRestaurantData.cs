@@ -6,11 +6,11 @@ namespace OdeToFood.Data
 {
     public class InMemoryRestaurantData : IRestaurantData
     {
-        private List<Restaurant> restaurants;
+        private readonly List<Restaurant> _restaurants;
 
         public InMemoryRestaurantData()
         {
-            restaurants = new List<Restaurant>()
+            _restaurants = new List<Restaurant>()
             {
                 new Restaurant{Id = 1, Name = "Scott's Pizza", Location = "Maryland", Cuisine = CuisineType.Italian},
                 new Restaurant{Id = 2, Name = "Big Truck Tacos", Location = "Oklahoma", Cuisine = CuisineType.Mexican},
@@ -21,8 +21,8 @@ namespace OdeToFood.Data
 
         public Restaurant Add(Restaurant newRestaurant)
         {
-            newRestaurant.Id = restaurants.Max(r => r.Id) + 1;
-            restaurants.Add(newRestaurant);
+            newRestaurant.Id = _restaurants.Max(r => r.Id) + 1;
+            _restaurants.Add(newRestaurant);
 
             return newRestaurant;
         }
@@ -33,6 +33,18 @@ namespace OdeToFood.Data
             return 0;
         }
 
+        public Restaurant Delete(int id)
+        {
+            var restaurant = _restaurants.FirstOrDefault(r => r.Id == id);
+
+            if (restaurant != null)
+            {
+                _restaurants.Remove(restaurant);
+            }
+
+            return restaurant;
+        }
+
         public Restaurant GetById(int id)
         {
             //var results = from r in restaurants
@@ -40,12 +52,12 @@ namespace OdeToFood.Data
             //       select r;
 
             //return results.First();
-            return restaurants.SingleOrDefault(r => r.Id == id);
+            return _restaurants.SingleOrDefault(r => r.Id == id);
         }
 
         public IEnumerable<Restaurant> GetRestaurantsByName(string name = null)
         {
-            return from r in restaurants
+            return from r in _restaurants
                    where string.IsNullOrEmpty(name) || r.Name.StartsWith(name)
                    orderby r.Name
                    select r;
