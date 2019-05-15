@@ -19,6 +19,12 @@ namespace OdeToFood.Data
             };
         }
 
+        public int Commit()
+        {
+            // Really only needed when we start using a real data source
+            return 0;
+        }
+
         public Restaurant GetById(int id)
         {
             //var results = from r in restaurants
@@ -35,6 +41,20 @@ namespace OdeToFood.Data
                    where string.IsNullOrEmpty(name) || r.Name.StartsWith(name)
                    orderby r.Name
                    select r;
+        }
+
+        public Restaurant Update(Restaurant updatedRestaurant)
+        {
+            var restaurant = GetById(updatedRestaurant.Id);
+
+            if (restaurant != null)
+            {
+                restaurant.Name = updatedRestaurant.Name;
+                restaurant.Location = updatedRestaurant.Location;
+                restaurant.Cuisine = updatedRestaurant.Cuisine;
+            }
+
+            return restaurant;
         }
     }
 }
