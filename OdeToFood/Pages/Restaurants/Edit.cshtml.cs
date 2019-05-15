@@ -9,13 +9,8 @@ namespace OdeToFood.Pages.Restaurants
 {
     public class EditModel : PageModel
     {
-        private readonly IRestaurantData restaurantData;
         private readonly IHtmlHelper htmlHelper;
-
-        [BindProperty]
-        public Restaurant Restaurant { get; set; }
-
-        public IEnumerable<SelectListItem> Cuisines { get; set; }
+        private readonly IRestaurantData restaurantData;
 
         public EditModel(IRestaurantData restaurantData, IHtmlHelper htmlHelper)
         {
@@ -23,10 +18,23 @@ namespace OdeToFood.Pages.Restaurants
             this.htmlHelper = htmlHelper;
         }
 
-        public IActionResult OnGet(int id)
+        public IEnumerable<SelectListItem> Cuisines { get; set; }
+
+        [BindProperty]
+        public Restaurant Restaurant { get; set; }
+
+        public IActionResult OnGet(int? id)
         {
             Cuisines = htmlHelper.GetEnumSelectList<CuisineType>();
-            Restaurant = restaurantData.GetById(id);
+
+            if (id.HasValue)
+            {
+                Restaurant = restaurantData.GetById(id.Value);
+            }
+            else
+            {
+                Restaurant = new Restaurant();
+            }
 
             if (Restaurant == null)
             {
@@ -38,17 +46,24 @@ namespace OdeToFood.Pages.Restaurants
 
         public IActionResult OnPost()
         {
-            Cuisines = htmlHelper.GetEnumSelectList<CuisineType>();
-
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                restaurantData.Update(Restaurant);
-                restaurantData.Commit();
-
-                return RedirectToPage("./Detail", new { id = Restaurant.Id});
+                Cuisines = htmlHelper.GetEnumSelectList<CuisineType>();
+                return Page();
             }
 
-            return Page();
+            if (Restaurant.Id == 0)
+            {
+                restaurantData.Add(Restaurant);
+            }
+            else
+            {
+                restaurantData.Update(Restaurant);
+            }
+            restaurantData.Commit();
+
+            TempData["Message"] = "Restaurant saved!";
+            return RedirectToPage("./Detail", new { id = Restaurant.Id });
         }
     }
 }

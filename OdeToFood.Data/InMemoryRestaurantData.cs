@@ -19,6 +19,14 @@ namespace OdeToFood.Data
             };
         }
 
+        public Restaurant Add(Restaurant newRestaurant)
+        {
+            newRestaurant.Id = restaurants.Max(r => r.Id) + 1;
+            restaurants.Add(newRestaurant);
+
+            return newRestaurant;
+        }
+
         public int Commit()
         {
             // Really only needed when we start using a real data source
