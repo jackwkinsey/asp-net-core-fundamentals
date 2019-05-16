@@ -6,6 +6,8 @@
         Mexican,
         Italian,
         Indian,
-        Vietnamese
+        Vietnamese,
+        Chinese,
+        Korean
     }
 }
