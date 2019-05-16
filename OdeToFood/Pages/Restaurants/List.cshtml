@@ -19,6 +19,11 @@
     </div>
 </form>
 
+@if (Model.Message != null)
+{
+    <div class="alert alert-success">@Model.Message</div>
+}
+
 <table class="table">
     <tr>
         <th>Name</th>
@@ -43,9 +48,19 @@
                    asp-route-id="@restaurant.Id">
                     <i class="glyphicon glyphicon-edit"></i>
                 </a>
+                <a class="btn btn-lg"
+                   asp-page="./Delete"
+                   asp-route-id="@restaurant.Id">
+                    <i class="glyphicon glyphicon-trash"></i>
+                </a>
             </td>
         </tr>
     }
 </table>
 
 <a asp-page="./Edit" class="btn btn-primary">Add New</a>
+
+@section footer
+{
+    <div>@Model.ConfigMessage</div>
+}

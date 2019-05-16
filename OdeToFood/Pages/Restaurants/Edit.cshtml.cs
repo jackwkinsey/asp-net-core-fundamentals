@@ -9,13 +9,13 @@ namespace OdeToFood.Pages.Restaurants
 {
     public class EditModel : PageModel
     {
-        private readonly IHtmlHelper htmlHelper;
-        private readonly IRestaurantData restaurantData;
+        private readonly IHtmlHelper _htmlHelper;
+        private readonly IRestaurantData _restaurantData;
 
         public EditModel(IRestaurantData restaurantData, IHtmlHelper htmlHelper)
         {
-            this.restaurantData = restaurantData;
-            this.htmlHelper = htmlHelper;
+            _restaurantData = restaurantData;
+            _htmlHelper = htmlHelper;
         }
 
         public IEnumerable<SelectListItem> Cuisines { get; set; }
@@ -25,16 +25,9 @@ namespace OdeToFood.Pages.Restaurants
 
         public IActionResult OnGet(int? id)
         {
-            Cuisines = htmlHelper.GetEnumSelectList<CuisineType>();
+            Cuisines = _htmlHelper.GetEnumSelectList<CuisineType>();
 
-            if (id.HasValue)
-            {
-                Restaurant = restaurantData.GetById(id.Value);
-            }
-            else
-            {
-                Restaurant = new Restaurant();
-            }
+            Restaurant = id.HasValue ? _restaurantData.GetById(id.Value) : new Restaurant();
 
             if (Restaurant == null)
             {
@@ -48,19 +41,19 @@ namespace OdeToFood.Pages.Restaurants
         {
             if (!ModelState.IsValid)
             {
-                Cuisines = htmlHelper.GetEnumSelectList<CuisineType>();
+                Cuisines = _htmlHelper.GetEnumSelectList<CuisineType>();
                 return Page();
             }
 
             if (Restaurant.Id == 0)
             {
-                restaurantData.Add(Restaurant);
+                _restaurantData.Add(Restaurant);
             }
             else
             {
-                restaurantData.Update(Restaurant);
+                _restaurantData.Update(Restaurant);
             }
-            restaurantData.Commit();
+            _restaurantData.Commit();
 
             TempData["Message"] = "Restaurant saved!";
             return RedirectToPage("./Detail", new { id = Restaurant.Id });
