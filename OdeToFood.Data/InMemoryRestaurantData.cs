@@ -55,6 +55,11 @@ namespace OdeToFood.Data
             return _restaurants.SingleOrDefault(r => r.Id == id);
         }
 
+        public int GetCountOfRestaurants()
+        {
+            return _restaurants.Count;
+        }
+
         public IEnumerable<Restaurant> GetRestaurantsByName(string name = null)
         {
             return from r in _restaurants

@@ -13,6 +13,8 @@ namespace OdeToFood.Data
 
         Restaurant GetById(int id);
 
+        int GetCountOfRestaurants();
+
         IEnumerable<Restaurant> GetRestaurantsByName(string name);
 
         Restaurant Update(Restaurant updatedRestaurant);
